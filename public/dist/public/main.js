@@ -304,7 +304,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <div class=\"row\">\n    <div class=\"col-md-6\">\n      <!-- <a class=\"btn btn-primary text-white mt-3\" (click)=\"toggleForm()\">Add a User</a> -->\n      <a class=\"btn btn-success text-white mt-3\" [routerLink]=\"['/restaurants/new']\">New Restaurant</a>\n    </div>\n  </div>\n  <div class=\"col-md-12\">\n    <h1 class=\"display-4 display-5 mt-5 mb-4\">Current Users:</h1>\n  </div>\n  <table class=\"table\">\n    <thead>\n      <tr>\n        <th>User</th>\n        <th>Cuisine</th>\n        <th>Actions</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr *ngFor=\"let item of restos\">\n        <td>{{item.name}}</td>\n        <td>{{item.cuisine}}</td>\n        <td>\n          <a [routerLink]=\"['/restaurants', item._id]\" class=\"btn btn-primary mr-2\">Read Reviews</a>\n          <!-- <button (click)=\"toggleForm(item._id)\" [routerLink]=\"['edit']\" class=\"btn btn-warning mr-2\">Edit</button> -->\n          <button (click)=\"toggleForm(item._id)\" [routerLink]=\"[item._id, 'edit']\" class=\"btn btn-warning mr-2\">Edit</button>\n          <button (click)=\"nukeResto(item._id)\" class=\"btn btn-danger\">Delete</button>\n        </td>\n      </tr>\n    </tbody>\n  </table>\n</div>\n<!-- <app-resto-edit *ngIf=\"isFormVisible\" [isFormVisible]=\"isFormVisible\" (anEventEmitter)=\"dataFromChild($event)\"></app-resto-edit> -->\n<app-resto-edit *ngIf=\"isFormVisible\" [isFormVisible]=\"isFormVisible\" [restoId]=\"restoId\" (anEventEmitter)=\"dataFromChild($event)\"></app-resto-edit>\n"
+module.exports = "<div class=\"container\">\n  <div class=\"row\">\n    <div class=\"col-md-6\">\n      <!-- <a class=\"btn btn-primary text-white mt-3\" (click)=\"toggleForm()\">Add a User</a> -->\n      <a class=\"btn btn-success text-white mt-3\" [routerLink]=\"['/restaurants/new']\">New Restaurant</a>\n    </div>\n  </div>\n  <div class=\"col-md-12\">\n    <h1 class=\"display-4 display-5 mt-5 mb-4\">Current Users:</h1>\n  </div>\n  <table class=\"table\">\n    <thead>\n      <tr>\n        <th>User</th>\n        <th>Cuisine</th>\n        <th>Actions</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr *ngFor=\"let item of restos\">\n        <td>{{item.name}}</td>\n        <td>{{item.cuisine}}</td>\n        <td>\n          <a [routerLink]=\"['/restaurants', item._id]\" class=\"btn btn-primary mr-2\">Read Reviews</a>\n          <!-- <button (click)=\"toggleForm(item._id)\" [routerLink]=\"['edit']\" class=\"btn btn-warning mr-2\">Edit</button> -->\n          <button (click)=\"toggleForm(item._id)\" [routerLink]=\"[item._id, 'edit']\" class=\"btn btn-warning mr-2\">Edit</button>\n          <button *ngIf=\"item.delete\" (click)=\"nukeResto(item._id)\" class=\"btn btn-danger\">Delete</button>\n        </td>\n      </tr>\n    </tbody>\n  </table>\n</div>\n<!-- <app-resto-edit *ngIf=\"isFormVisible\" [isFormVisible]=\"isFormVisible\" (anEventEmitter)=\"dataFromChild($event)\"></app-resto-edit> -->\n<app-resto-edit *ngIf=\"isFormVisible\" [isFormVisible]=\"isFormVisible\" [restoId]=\"restoId\" (anEventEmitter)=\"dataFromChild($event)\"></app-resto-edit>\n"
 
 /***/ }),
 
@@ -348,6 +348,19 @@ var RestoAllComponent = /** @class */ (function () {
         obs.subscribe(function (res) {
             console.log("Restaurants", res);
             _this.restos = res['data'];
+            for (var i = 0; i < _this.restos.length; i++) {
+                var current = _this.restos[i];
+                var currentTime = new Date(current['createdAt']);
+                var now = new Date(Date.now());
+                console.log((now.getTime() - currentTime.getTime()) / 1000);
+                if ((now.getTime() - currentTime.getTime()) / 1000 < 30) {
+                    console.log('true');
+                    _this.restos[i];
+                    _this.restos[i].delete = true;
+                    console.log(_this.restos[i]);
+                }
+            }
+            console.log(_this.restos);
         });
     };
     RestoAllComponent.prototype.toggleForm = function (id) {
@@ -622,7 +635,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <div class=\"row\">\n    <div class=\"col-md-4\">\n      <!-- <a class=\"btn btn-primary text-white mt-3\" (click)=\"toggleForm()\">Add a User</a> -->\n      <!-- <a class=\"btn btn-success text-white mt-3\" [routerLink]=\"['/restaurants', resto._id ,'review']\">New Review</a> -->\n      <a class=\"btn btn-success text-white mt-3\" [routerLink]=\"['review']\" (click)=\"toggleForm()\">New Review</a>\n    </div>\n    <div class=\"col-md-6\">\n      <h1 class=\"display-4 display-5\">Reviews for {{resto.name}}</h1>\n    </div>\n  </div>\n  <div class=\"col-md-12\">\n    <h1 class=\"display-4 display-5 mt-5 mb-4\">Current Users:</h1>\n  </div>\n  <table class=\"table\">\n    <thead>\n      <tr>\n        <th>Customer</th>\n        <th>Stars</th>\n        <th>Description</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr *ngFor=\"let item of resto.reviews\">\n        <td>{{item.name}}</td>\n        <td>{{item.rating}}</td>\n        <td>{{item.content}}</td>\n      </tr>\n    </tbody>\n  </table>\n</div>\n<app-review-new *ngIf=\"isFormVisible\" [resto]=\"resto\" (anEventEmitter)=\"dataFromChild($event)\"></app-review-new>\n"
+module.exports = "<div class=\"container\" [ngClass]=\"{'display': !isFormVisible}\">\n  <div class=\"row\">\n    <div class=\"col-md-4\">\n      <!-- <a class=\"btn btn-primary text-white mt-3\" (click)=\"toggleForm()\">Add a User</a> -->\n      <!-- <a class=\"btn btn-success text-white mt-3\" [routerLink]=\"['/restaurants', resto._id ,'review']\">New Review</a> -->\n      <a class=\"btn btn-success text-white mt-3\" [routerLink]=\"['review']\" (click)=\"toggleForm()\">New Review</a>\n    </div>\n    <div class=\"col-md-6\">\n      <h1 class=\"display-4 display-5\">Reviews for {{resto.name}}</h1>\n    </div>\n  </div>\n  <div class=\"col-md-12\">\n    <h1 class=\"display-4 display-5 mt-5 mb-4\">Current Users:</h1>\n  </div>\n  <table class=\"table\">\n    <thead>\n      <tr>\n        <th>Customer</th>\n        <th>Stars</th>\n        <th>Description</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr *ngFor=\"let item of resto.reviews\">\n        <td>{{item.name}}</td>\n        <td>{{item.rating}}</td>\n        <td>{{item.content}}</td>\n      </tr>\n    </tbody>\n  </table>\n</div>\n<app-review-new *ngIf=\"isFormVisible\" [resto]=\"resto\" (anEventEmitter)=\"dataFromChild($event)\"></app-review-new>\n"
 
 /***/ }),
 

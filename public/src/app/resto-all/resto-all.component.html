@@ -24,7 +24,7 @@
           <a [routerLink]="['/restaurants', item._id]" class="btn btn-primary mr-2">Read Reviews</a>
           <!-- <button (click)="toggleForm(item._id)" [routerLink]="['edit']" class="btn btn-warning mr-2">Edit</button> -->
           <button (click)="toggleForm(item._id)" [routerLink]="[item._id, 'edit']" class="btn btn-warning mr-2">Edit</button>
-          <button (click)="nukeResto(item._id)" class="btn btn-danger">Delete</button>
+          <button *ngIf="item.delete" (click)="nukeResto(item._id)" class="btn btn-danger">Delete</button>
         </td>
       </tr>
     </tbody>
