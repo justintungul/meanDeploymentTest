@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { HttpService } from '../http.service';
-import { ActivatedRoute } from '@angular/router';
-import { Router } from '@angular/router';
+// import { ActivatedRoute } from '@angular/router';
+// import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-review-new',
@@ -17,9 +17,8 @@ export class ReviewNewComponent implements OnInit {
   @Output() anEventEmitter = new EventEmitter();
 
   constructor(
-    private route: ActivatedRoute, 
-    private _httpService: HttpService, 
-    private router: Router) {}
+    private _httpService: HttpService,
+  ) { }
 
   ngOnInit() {
     this.newReview = {
@@ -32,26 +31,26 @@ export class ReviewNewComponent implements OnInit {
     console.log(this.resto);
   }
   closeForm() {
-    this.anEventEmitter.emit(false); 
+    this.anEventEmitter.emit(false);
   }
-  createReview(){
-      let obs = this._httpService.createReview(this.resto['_id'], this.newReview);
-      obs.subscribe(res => {
-        console.log("Review created", res);
-        if (!res['status']) {
-          if (this.newReview['rating'].length === 0) {
-            this.selectError = "Rating cannot be blank";
-          } else if (this.newReview['rating'] < 1 || this.newReview['rating'] > 6) {
-            this.selectError = "Rating must be between 1 and 5";
-          } 
-          this.showErrors = true;
-        } else {
-          this.showErrors = false;
-          this.anEventEmitter.emit(false); 
+
+  createReview() {
+    let obs = this._httpService.createReview(this.resto['_id'], this.newReview);
+
+    obs.subscribe(res => {
+      console.log("Review created", res);
+      if (!res['status']) {
+        if (this.newReview['rating'].length === 0) {
+          this.selectError = "Rating cannot be blank";
+        } else if (this.newReview['rating'] < 1 || this.newReview['rating'] > 6) {
+          this.selectError = "Rating must be between 1 and 5";
         }
-      })
-    }
+        this.showErrors = true;
+      } else {
+        this.showErrors = false;
+        this.anEventEmitter.emit(false);
+      }
+    })
   }
-
-
 }
+

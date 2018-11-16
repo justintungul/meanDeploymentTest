@@ -56,8 +56,10 @@ var __decorate = (undefined && undefined.__decorate) || function (decorators, ta
 var routes = [
     { path: '', pathMatch: 'full', redirectTo: '/restaurants' },
     { path: 'restaurants', component: _resto_all_resto_all_component__WEBPACK_IMPORTED_MODULE_2__["RestoAllComponent"], children: [
-            { path: 'edit/:id', component: _resto_edit_resto_edit_component__WEBPACK_IMPORTED_MODULE_4__["RestoEditComponent"] },
+            { path: ':id/edit/', component: _resto_edit_resto_edit_component__WEBPACK_IMPORTED_MODULE_4__["RestoEditComponent"] },
         ] },
+    // { path: 'restaurants', component: RestoAllComponent}
+    // { path: 'restaurants/:id/edit/', component: RestoEditComponent },
     { path: 'restaurants/new', component: _resto_new_resto_new_component__WEBPACK_IMPORTED_MODULE_3__["RestoNewComponent"] },
     { path: 'restaurants/:id', component: _review_all_review_all_component__WEBPACK_IMPORTED_MODULE_5__["ReviewAllComponent"], children: [
             { path: 'review', component: _review_new_review_new_component__WEBPACK_IMPORTED_MODULE_6__["ReviewNewComponent"] },
@@ -302,7 +304,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"container\">\n  <div class=\"row\">\n    <div class=\"col-md-6\">\n      <!-- <a class=\"btn btn-primary text-white mt-3\" (click)=\"toggleForm()\">Add a User</a> -->\n      <a class=\"btn btn-success text-white mt-3\" [routerLink]=\"['/restaurants/new']\">New Restaurant</a>\n    </div>\n  </div>\n  <div class=\"col-md-12\">\n    <h1 class=\"display-4 display-5 mt-5 mb-4\">Current Users:</h1>\n  </div>\n  <table class=\"table\">\n    <thead>\n      <tr>\n        <th>User</th>\n        <th>Cuisine</th>\n        <th>Actions</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr *ngFor=\"let item of restos\">\n        <td>{{item.name}}</td>\n        <td>{{item.cuisine}}</td>\n        <td>\n          <a [routerLink]=\"['/restaurants', item._id]\" class=\"btn btn-primary mr-2\">Read Reviews</a>\n          <!-- <button (click)=\"toggleForm(item._id)\" [routerLink]=\"['edit']\" class=\"btn btn-warning mr-2\">Edit</button> -->\n          <button (click)=\"toggleForm(item._id)\" class=\"btn btn-warning mr-2\">Edit</button>\n          <button (click)=\"nukeResto(item._id)\" class=\"btn btn-danger\">Delete</button>\n        </td>\n      </tr>\n    </tbody>\n  </table>\n</div>\n<!-- <app-resto-edit *ngIf=\"isFormVisible\" [isFormVisible]=\"isFormVisible\" (anEventEmitter)=\"dataFromChild($event)\"></app-resto-edit> -->\n<app-resto-edit *ngIf=\"isFormVisible\" [isFormVisible]=\"isFormVisible\" [restoId]=\"restoId\" (anEventEmitter)=\"dataFromChild($event)\"></app-resto-edit>\n"
+module.exports = "<div class=\"container\">\n  <div class=\"row\">\n    <div class=\"col-md-6\">\n      <!-- <a class=\"btn btn-primary text-white mt-3\" (click)=\"toggleForm()\">Add a User</a> -->\n      <a class=\"btn btn-success text-white mt-3\" [routerLink]=\"['/restaurants/new']\">New Restaurant</a>\n    </div>\n  </div>\n  <div class=\"col-md-12\">\n    <h1 class=\"display-4 display-5 mt-5 mb-4\">Current Users:</h1>\n  </div>\n  <table class=\"table\">\n    <thead>\n      <tr>\n        <th>User</th>\n        <th>Cuisine</th>\n        <th>Actions</th>\n      </tr>\n    </thead>\n    <tbody>\n      <tr *ngFor=\"let item of restos\">\n        <td>{{item.name}}</td>\n        <td>{{item.cuisine}}</td>\n        <td>\n          <a [routerLink]=\"['/restaurants', item._id]\" class=\"btn btn-primary mr-2\">Read Reviews</a>\n          <!-- <button (click)=\"toggleForm(item._id)\" [routerLink]=\"['edit']\" class=\"btn btn-warning mr-2\">Edit</button> -->\n          <button (click)=\"toggleForm(item._id)\" [routerLink]=\"[item._id, 'edit']\" class=\"btn btn-warning mr-2\">Edit</button>\n          <button (click)=\"nukeResto(item._id)\" class=\"btn btn-danger\">Delete</button>\n        </td>\n      </tr>\n    </tbody>\n  </table>\n</div>\n<!-- <app-resto-edit *ngIf=\"isFormVisible\" [isFormVisible]=\"isFormVisible\" (anEventEmitter)=\"dataFromChild($event)\"></app-resto-edit> -->\n<app-resto-edit *ngIf=\"isFormVisible\" [isFormVisible]=\"isFormVisible\" [restoId]=\"restoId\" (anEventEmitter)=\"dataFromChild($event)\"></app-resto-edit>\n"
 
 /***/ }),
 
@@ -731,7 +733,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"row\">\n    <form (submit)=\"createReview()\" class=\"col-md-6 offset-md-3\">\n      <h1 class=\"display-4 display-5 mt-5 mb-4\">Write a Review for {{resto.name}}</h1>\n      <div class=\"form-group\">\n        <label>Your Name</label>\n        <input \n          class=\"form-control\"\n          type=\"text\" \n          name=\"name\"\n          required \n          minlength=\"3\" \n          [(ngModel)]=\"newReview.name\"\n          #name=\"ngModel\"\n          (change)=\"showErrors = false\"\n        >\n        <!-- <div *ngIf=\"duplicatError.length > 0\" class=\"small text-danger\">{{duplicatError}}</div> -->\n        <div *ngIf=\"name.errors && (name.dirty || name.touched) || showErrors\">\n          <div *ngIf=\"name.errors.required\" class=\"small text-danger\">Name must not be blank</div>\n          <div *ngIf=\"name.errors.minlength\" class=\"small text-danger\">Name must contain at least 3 characters</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <label>Stars</label>\n        <select class=\"form-control\" id=\"exampleFormControlSelect1\" name=\"newReview.rating\" [(ngModel)]=\"newReview.rating\">\n          <option selected value=\"1\">1</option>\n          <option value=\"1\">2</option>\n          <option value=\"2\">3</option>\n          <option value=\"3\">4</option>\n          <option value=\"5\">5</option>\n        </select>\n        <div *ngIf=\"selectError.length > 0\" class=\"small text-danger\">{{selectError}}</div>\n      </div>\n      <div class=\"form-group\">\n        <label>Your Review:</label>\n        <input \n          class=\"form-control\"\n          type=\"text\" \n          name=\"content\"\n          required \n          minlength=\"3\" \n          [(ngModel)]=\"newReview.content\"\n          #content=\"ngModel\"\n          (change)=\"showErrors = false\"\n        >\n        <div *ngIf=\"content.errors && (content.dirty || content.touched) || showErrors\">\n          <div *ngIf=\"content.errors.required\" class=\"small text-danger\">Review must not be blank</div>\n          <div *ngIf=\"content.errors.minlength\" class=\"small text-danger\">Review must contain at least 3 characters</div>\n        </div>\n      </div>\n      <a (click)=\"closeForm($event)\" class=\"btn btn-danger mr-2 text-white\">Cancel</a>\n      <button type=\"submit\" class=\"btn btn-primary\">Submit</button>\n    </form>\n  </div>\n  "
+module.exports = "<div class=\"row\">\n    <form (submit)=\"createReview()\" class=\"col-md-6 offset-md-3\">\n      <h1 class=\"display-4 display-5 mt-5 mb-4\">Write a Review for {{resto.name}}</h1>\n      <div class=\"form-group\">\n        <label>Your Name</label>\n        <input \n          class=\"form-control\"\n          type=\"text\" \n          name=\"name\"\n          required \n          minlength=\"3\" \n          [(ngModel)]=\"newReview.name\"\n          #name=\"ngModel\"\n          (change)=\"showErrors = false\"\n        >\n        <!-- <div *ngIf=\"duplicatError.length > 0\" class=\"small text-danger\">{{duplicatError}}</div> -->\n        <div *ngIf=\"name.errors && (name.dirty || name.touched) || showErrors\">\n          <div *ngIf=\"name.errors.required\" class=\"small text-danger\">Name must not be blank</div>\n          <div *ngIf=\"name.errors.minlength\" class=\"small text-danger\">Name must contain at least 3 characters</div>\n        </div>\n      </div>\n      <div class=\"form-group\">\n        <label>Stars</label>\n        <select class=\"form-control\" id=\"exampleFormControlSelect1\" name=\"newReview.rating\" [(ngModel)]=\"newReview.rating\">\n          <option selected value=\"1\">1</option>\n          <option value=\"2\">2</option>\n          <option value=\"3\">3</option>\n          <option value=\"4\">4</option>\n          <option value=\"5\">5</option>\n        </select>\n        <div *ngIf=\"selectError.length > 0\" class=\"small text-danger\">{{selectError}}</div>\n      </div>\n      <div class=\"form-group\">\n        <label>Your Review:</label>\n        <input \n          class=\"form-control\"\n          type=\"text\" \n          name=\"content\"\n          required \n          minlength=\"3\" \n          [(ngModel)]=\"newReview.content\"\n          #content=\"ngModel\"\n          (change)=\"showErrors = false\"\n        >\n        <div *ngIf=\"content.errors && (content.dirty || content.touched) || showErrors\">\n          <div *ngIf=\"content.errors.required\" class=\"small text-danger\">Review must not be blank</div>\n          <div *ngIf=\"content.errors.minlength\" class=\"small text-danger\">Review must contain at least 3 characters</div>\n        </div>\n      </div>\n      <a (click)=\"closeForm($event)\" class=\"btn btn-danger mr-2 text-white\">Cancel</a>\n      <button type=\"submit\" class=\"btn btn-primary\">Submit</button>\n    </form>\n  </div>\n  "
 
 /***/ }),
 
@@ -747,7 +749,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ReviewNewComponent", function() { return ReviewNewComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var _http_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../http.service */ "./src/app/http.service.ts");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -759,13 +760,11 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 };
 
 
-
-
+// import { ActivatedRoute } from '@angular/router';
+// import { Router } from '@angular/router';
 var ReviewNewComponent = /** @class */ (function () {
-    function ReviewNewComponent(route, _httpService, router) {
-        this.route = route;
+    function ReviewNewComponent(_httpService) {
         this._httpService = _httpService;
-        this.router = router;
         this.anEventEmitter = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["EventEmitter"]();
     }
     ReviewNewComponent.prototype.ngOnInit = function () {
@@ -819,9 +818,7 @@ var ReviewNewComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./review-new.component.html */ "./src/app/review-new/review-new.component.html"),
             styles: [__webpack_require__(/*! ./review-new.component.css */ "./src/app/review-new/review-new.component.css")]
         }),
-        __metadata("design:paramtypes", [_angular_router__WEBPACK_IMPORTED_MODULE_2__["ActivatedRoute"],
-            _http_service__WEBPACK_IMPORTED_MODULE_1__["HttpService"],
-            _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]])
+        __metadata("design:paramtypes", [_http_service__WEBPACK_IMPORTED_MODULE_1__["HttpService"]])
     ], ReviewNewComponent);
     return ReviewNewComponent;
 }());
